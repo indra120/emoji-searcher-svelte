@@ -1,11 +1,15 @@
-<script>
+<script lang="ts">
   import { emojis } from "@/store"
   import EmojiBox from "./EmojiBox.svelte"
+  import { searchEmoji } from "@/utils/searchEmoji"
+
+  export let search = ""
+  $: filteredEmojis = searchEmoji({ emojis: $emojis, search })
 </script>
 
-{#if $emojis.length > 0}
+{#if filteredEmojis.length > 0}
   <div class="emojis">
-    {#each $emojis.splice(0, 20) as { title, symbol }, i (i)}
+    {#each filteredEmojis as { title, symbol }, i (i)}
       <EmojiBox {title} {symbol} />
     {/each}
   </div>

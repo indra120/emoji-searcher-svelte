@@ -1,6 +1,7 @@
 <script lang="ts">
   import { emojis } from "@/store"
   import EmojiBox from "./EmojiBox.svelte"
+  import Empty from "./Empty.svelte"
   import { searchEmoji } from "@/utils/searchEmoji"
 
   export let search = ""
@@ -13,6 +14,8 @@
       <EmojiBox {title} {symbol} />
     {/each}
   </div>
+{:else}
+  <Empty text="Oops, zero finding. Let's try another keyword!" />
 {/if}
 
 <style scoped>

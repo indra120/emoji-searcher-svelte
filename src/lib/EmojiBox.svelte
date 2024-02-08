@@ -1,12 +1,25 @@
 <script lang="ts">
+  import { afterUpdate, onDestroy } from "svelte"
+
   export let title: string
   export let symbol: string
+
+  let isSelected = false
+  let timer: NodeJS.Timeout
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(symbol)
+    isSelected = true
+  }
+
+  afterUpdate(() => (timer = setTimeout(() => (isSelected = false), 600)))
+  onDestroy(() => clearTimeout(timer))
 </script>
 
-<div class="emoji-box">
+<div on:click={copyToClipboard} class="emoji-box" class:selected={isSelected}>
   <p class="emoji">{@html `&#${symbol.codePointAt(0)};`}</p>
-  <p class="emoji-text">
-    {title}
+  <p class="emoji-text" class:selected-text={isSelected}>
+    {isSelected ? "Copied!" : title}
   </p>
 </div>
 
@@ -34,5 +47,15 @@
   .emoji-text {
     font-size: 12px;
     font-weight: 600;
+  }
+
+  .selected {
+    transform: rotate(32deg) scale(1.4, 1.4);
+    box-shadow: var(--main-box-shadow-elevated);
+  }
+
+  .selected-text {
+    font-size: 16px;
+    font-weight: bold;
   }
 </style>
